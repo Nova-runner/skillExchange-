@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= mode === 'signup' ? 'Make an account' : 'Sign in' %> — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-brand">
+      <a href="/" class="auth-brand-logo"><span class="logo-mark">✦</span> skillexchange</a>
+      <div class="auth-brand-copy">
+        <div class="eyebrow">Make room for possibility</div>
+        <h1>Your next useful conversation is out there.</h1>
+        <p>Join a thoughtful community where people trade skills, context, and a little momentum.</p>
+        <div class="auth-stats">
+          <div><strong>2.4k</strong><span>curious members</span></div>
+          <div><strong>84%</strong><span>find a match in a week</span></div>
+        </div>
+      </div>
+      <div class="auth-brand-foot">Give a little. Learn a lot.</div>
+    </div>
+
+    <div class="auth-panel">
+      <div class="auth-panel-top">
+        <a href="/">← Back to home</a>
+      </div>
+      <div class="auth-form-wrap">
+        <% if (mode === 'signup') { %>
+          <div class="eyebrow">Join the community</div>
+          <h1>Make an account.</h1>
+          <p>Tell us a little about yourself and we’ll help you get started.</p>
+          <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+          <form method="POST" action="/auth/register" class="form">
+            <label>Full name</label>
+            <input type="text" name="name" required placeholder="Alex Kim" />
+            <label>Email address</label>
+            <input type="email" name="email" required placeholder="alex@example.com" />
+            <label>Create a password</label>
+            <input type="password" name="password" required minlength="6" placeholder="At least 6 characters" />
+            <label class="checkbox-row">
+              <input type="checkbox" required /> I agree to the community guidelines
+            </label>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Create account →</button>
+          </form>
+          <p class="auth-switch">Already a member? <a href="/auth?mode=login">Sign in</a></p>
+        <% } else { %>
+          <div class="eyebrow">Welcome back</div>
+          <h1>Sign in.</h1>
+          <p>Continue where you left off in the community.</p>
+          <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+          <form method="POST" action="/auth/login" class="form">
+            <label>Email address</label>
+            <input type="email" name="email" required placeholder="you@example.com" />
+            <label>Password</label>
+            <input type="password" name="password" required placeholder="Your password" />
+            <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:1.25rem">Sign in →</button>
+          </form>
+          <p class="auth-switch">New here? <a href="/auth?mode=signup">Create an account</a></p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My profile — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'profile', pendingCount: 0 }) %>
+    <div class="main">
+      <%- include('partials/topbar') %>
+      <div class="content">
+        <div class="page-head">
+          <div class="eyebrow">Your profile</div>
+        </div>
+
+        <div class="profile-header">
+          <div class="avatar lg av-peach"><%= user.name.charAt(0) %></div>
+          <div>
+            <h1><%= user.name %></h1>
+            <div class="meta"><%= user.title || 'Community member' %></div>
+            <div class="profile-actions">
+              <a href="/profile/edit" class="btn btn-primary btn-sm">Edit profile</a>
+              <a href="/discover" class="btn btn-outline btn-sm">Share profile</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h2 class="card-title">What I can help with</h2>
+            <p class="card-sub">Skills you’re happy to exchange.</p>
+            <% if (canHelp.length) { %>
+              <div class="tags">
+                <% canHelp.forEach(s => { %><span class="tag"><%= s.name %></span><% }) %>
+              </div>
+            <% } else { %>
+              <p class="empty">None yet. <a href="/profile/edit">Add skills</a></p>
+            <% } %>
+          </div>
+          <div class="card">
+            <h2 class="card-title">About <%= user.name.split(' ')[0] %></h2>
+            <p style="color:var(--muted);font-size:0.95rem;line-height:1.55;margin-bottom:1.25rem">
+              <%= user.bio || 'No bio yet — add a short note about yourself.' %>
+            </p>
+            <div style="border-top:1px solid var(--border);padding-top:1rem">
+              <div class="rhythm-stat" style="font-size:1.75rem"><%= canHelp.length + needHelp.length %> <span>skills listed</span></div>
+            </div>
+          </div>
+        </div>
+
+        <% if (needHelp.length) { %>
+        <div class="card mt">
+          <h2 class="card-title">What I need help with</h2>
+          <div class="tags" style="margin-top:0.75rem">
+            <% needHelp.forEach(s => { %><span class="tag"><%= s.name %></span><% }) %>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

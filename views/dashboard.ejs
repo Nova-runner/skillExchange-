@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Overview — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'overview', pendingCount: pendingReceived.length }) %>
+    <div class="main">
+      <%- include('partials/topbar') %>
+      <div class="content">
+        <div class="page-head-row">
+          <div class="page-head">
+            <div class="eyebrow"><%= new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></div>
+            <h1>Good <%= new Date().getHours() < 12 ? 'morning' : (new Date().getHours() < 17 ? 'afternoon' : 'evening') %>, <%= user.name.split(' ')[0] %> ✦</h1>
+            <p>Make progress on something that matters to you.</p>
+          </div>
+          <a href="/discover" class="btn btn-primary">◎ Explore skills</a>
+        </div>
+
+        <div class="momentum">
+          <div>
+            <div class="momentum-label">✦ Your weekly momentum</div>
+            <h2>Small steps, shared generously.</h2>
+            <p>Keep the exchange going by sharing what you know or asking for a fresh perspective.</p>
+            <a href="/discover" class="momentum-link">Find your next exchange →</a>
+          </div>
+          <div class="orbit">
+            <div class="blob av-peach" style="top:10px;right:30px">MR</div>
+            <div class="blob av-blue" style="bottom:20px;left:20px">EC</div>
+            <div class="blob av-purple" style="bottom:10px;right:10px">PS</div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h2>Suggested for you</h2>
+            <p class="muted" style="font-size:0.85rem">Based on skills you want to learn.</p>
+          </div>
+          <a href="/discover" class="view-all">View all →</a>
+        </div>
+
+        <% if (suggested.length) { %>
+        <div class="grid-3 mb">
+          <% const colors = ['av-peach','av-blue','av-purple','av-green','av-coral']; %>
+          <% suggested.forEach((item, i) => { %>
+            <div class="person-card">
+              <div class="person-card-top">
+                <div class="avatar <%= colors[i % colors.length] %>"><%= item.user.name.charAt(0) %></div>
+                <span class="tag tag-match"><%= 80 + (i * 3) % 15 %>% match</span>
+              </div>
+              <div>
+                <h3><%= item.user.name %></h3>
+                <div class="role"><%= item.user.title || 'Community member' %></div>
+              </div>
+              <div class="tags">
+                <span class="tag"><%= item.skill.name %></span>
+              </div>
+              <p class="blurb"><%= item.user.bio ? item.user.bio.slice(0, 100) + (item.user.bio.length > 100 ? '…' : '') : 'Happy to help with this skill.' %></p>
+              <div class="person-card-foot">
+                <span class="avail">Available this week</span>
+                <a href="/users/<%= item.user._id %>" class="btn btn-soft btn-sm">✈ Ask for help</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+          <div class="card mb"><p class="empty">Add skills you need on your <a href="/profile/edit">profile</a>, or <a href="/discover">search Discover</a>.</p></div>
+        <% } %>
+
+        <div class="grid-2">
+          <div class="card">
+            <h2>Requests for you</h2>
+            <p class="card-sub">People are looking forward to learning from you.</p>
+            <% if (pendingReceived.length) { %>
+              <% pendingReceived.forEach(r => { %>
+                <div class="request-row">
+                  <div class="avatar av-blue sm"><%= r.fromUser ? r.fromUser.name.charAt(0) : '?' %></div>
+                  <div class="request-body">
+                    <strong><%= r.fromUser ? r.fromUser.name : 'Someone' %></strong>
+                    <div class="want">wants help with <em><%= r.skill ? r.skill.name : 'a skill' %></em></div>
+                    <div class="msg"><%= r.message %></div>
+                  </div>
+                  <div class="request-actions">
+                    <form method="POST" action="/requests/<%= r._id %>/respond" style="display:inline">
+                      <input type="hidden" name="action" value="accept" />
+                      <button type="submit" class="btn btn-soft btn-sm">Accept</button>
+                    </form>
+                    <form method="POST" action="/requests/<%= r._id %>/respond" style="display:inline">
+                      <input type="hidden" name="action" value="decline" />
+                      <button type="submit" class="btn btn-outline btn-sm">Decline</button>
+                    </form>
+                  </div>
+                </div>
+              <% }) %>
+              <a href="/requests" class="view-all" style="display:inline-block;margin-top:0.75rem">See all requests →</a>
+            <% } else { %>
+              <p class="empty">No pending requests right now.</p>
+            <% } %>
+          </div>
+
+          <div class="card rhythm-card">
+            <h2>Your exchange rhythm</h2>
+            <p class="card-sub">A little consistency goes a long way.</p>
+            <div class="rhythm-stat"><%= canHelp.length + needHelp.length %> <span>skills listed</span></div>
+            <div class="bars">
+              <div class="bar" style="height:40%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:45%"></div>
+              <div class="bar" style="height:70%"></div>
+              <div class="bar" style="height:60%"></div>
+              <div class="bar peak" style="height:90%"></div>
+              <div class="bar" style="height:50%"></div>
+            </div>
+            <div class="bars-labels">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <p class="muted" style="font-size:0.85rem;margin-top:0.75rem">✦ Keep offering and asking — the cohort grows with you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

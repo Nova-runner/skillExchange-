@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notifications — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'notifications', pendingCount: 0 }) %>
+    <div class="main">
+      <%- include('partials/topbar') %>
+      <div class="content">
+        <div class="page-head">
+          <div class="eyebrow">Workspace</div>
+          <h1>Notifications</h1>
+          <p>Updates when someone requests help or responds.</p>
+        </div>
+        <div class="card">
+          <% if (notifications.length) { %>
+            <ul class="notif-list">
+              <% notifications.forEach(n => { %>
+                <li class="<%= n.read ? '' : 'unread' %>">
+                  <span><%= n.message %></span>
+                  <time><%= new Date(n.createdAt).toLocaleString() %></time>
+                </li>
+              <% }) %>
+            </ul>
+          <% } else { %>
+            <p class="empty">No notifications yet.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

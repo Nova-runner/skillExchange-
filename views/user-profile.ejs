@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= profileUser.name %> — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'discover', pendingCount: 0 }) %>
+    <div class="main">
+      <%- include('partials/topbar') %>
+      <div class="content">
+        <div class="profile-header">
+          <div class="avatar lg av-blue"><%= profileUser.name.charAt(0) %></div>
+          <div>
+            <h1><%= profileUser.name %></h1>
+            <div class="meta"><%= profileUser.title || 'Community member' %></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h2 class="card-title">What they can help with</h2>
+            <p class="card-sub">Skills they’re happy to exchange.</p>
+            <% if (canHelp.length) { %>
+              <div class="tags"><% canHelp.forEach(s => { %><span class="tag"><%= s.name %></span><% }) %></div>
+            <% } else { %>
+              <p class="empty">None listed.</p>
+            <% } %>
+          </div>
+          <div class="card">
+            <h2 class="card-title">About</h2>
+            <p style="color:var(--muted);line-height:1.55"><%= profileUser.bio || 'No bio yet.' %></p>
+            <% if (needHelp.length) { %>
+              <p class="section-label" style="margin-top:1.25rem">They need help with</p>
+              <div class="tags" style="margin-top:0.5rem"><% needHelp.forEach(s => { %><span class="tag"><%= s.name %></span><% }) %></div>
+            <% } %>
+          </div>
+        </div>
+
+        <% if (!isOwn && canHelp.length) { %>
+          <div class="card mt">
+            <h2 class="card-title">Ask for help</h2>
+            <p class="card-sub">Tell them briefly what you need.</p>
+            <form method="POST" action="/requests" class="form">
+              <input type="hidden" name="toUserId" value="<%= profileUser._id %>" />
+              <label>Skill</label>
+              <select name="skillId" required>
+                <% canHelp.forEach(s => { %><option value="<%= s._id %>"><%= s.name %></option><% }) %>
+              </select>
+              <label>Message</label>
+              <textarea name="message" rows="3" required maxlength="500" placeholder="Hi, I need help creating an Excel dashboard for a school project."></textarea>
+              <button type="submit" class="btn btn-primary" style="margin-top:1rem">✈ Send request</button>
+            </form>
+          </div>
+        <% } else if (isOwn) { %>
+          <p class="mt"><a href="/profile/edit" class="btn btn-outline">Edit your profile</a></p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

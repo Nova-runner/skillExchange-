@@ -1,0 +1,30 @@
+<aside class="sidebar">
+  <a href="/dashboard" class="sidebar-logo">
+    <span class="logo-mark">✦</span> skillexchange
+  </a>
+  <nav class="sidebar-nav">
+    <a href="/dashboard" class="nav-item <%= activeNav === 'overview' ? 'active' : '' %>">
+      <span class="nav-icon">◎</span> Overview
+    </a>
+    <a href="/discover" class="nav-item <%= activeNav === 'discover' ? 'active' : '' %>">
+      <span class="nav-icon">⌕</span> Discover
+    </a>
+    <a href="/requests" class="nav-item <%= activeNav === 'requests' ? 'active' : '' %>">
+      <span class="nav-icon">✉</span> Requests
+      <% if (typeof pendingCount !== 'undefined' && pendingCount > 0) { %>
+        <span class="badge"><%= pendingCount %></span>
+      <% } %>
+    </a>
+    <a href="/notifications" class="nav-item <%= activeNav === 'notifications' ? 'active' : '' %>">
+      <span class="nav-icon">🔔</span> Notifications
+    </a>
+    <a href="/profile" class="nav-item <%= activeNav === 'profile' ? 'active' : '' %>">
+      <span class="nav-icon">☺</span> Profile
+    </a>
+  </nav>
+  <div class="sidebar-foot">
+    <form method="POST" action="/auth/logout">
+      <button type="submit" class="nav-item logout-btn">Log out</button>
+    </form>
+  </div>
+</aside>

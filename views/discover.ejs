@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Discover — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'discover', pendingCount: 0 }) %>
+    <div class="main">
+      <%- include('partials/topbar', { searchQ: q }) %>
+      <div class="content">
+        <div class="page-head">
+          <div class="eyebrow">Workspace</div>
+          <h1>Discover</h1>
+          <p>Search skills and find people who can help.</p>
+        </div>
+
+        <form method="GET" action="/discover" class="search-inline">
+          <input type="search" name="q" value="<%= q %>" placeholder="e.g. Excel, React, UI Design" autofocus />
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <% if (!q) { %>
+          <p class="section-label mb">Popular skills</p>
+          <div class="tags mb">
+            <% popular.forEach(s => { %>
+              <a href="/discover?q=<%= encodeURIComponent(s.name) %>" class="tag" style="text-decoration:none"><%= s.name %></a>
+            <% }) %>
+          </div>
+        <% } %>
+
+        <% if (q) { %>
+          <div class="section-head">
+            <h2>
+              <% if (skill) { %>People who can help with <em style="font-style:normal;color:var(--accent)"><%= skill.name %></em>
+              <% } else { %>No exact match for “<%= q %>”<% } %>
+            </h2>
+          </div>
+          <% if (results.length) { %>
+            <div class="grid-3">
+              <% const colors = ['av-peach','av-blue','av-purple','av-green','av-coral']; %>
+              <% results.forEach((m, i) => { %>
+                <div class="person-card">
+                  <div class="person-card-top">
+                    <div class="avatar <%= colors[i % colors.length] %>"><%= m.user.name.charAt(0) %></div>
+                  </div>
+                  <div>
+                    <h3><%= m.user.name %></h3>
+                    <div class="role"><%= m.user.title || 'Community member' %></div>
+                  </div>
+                  <div class="tags"><span class="tag"><%= m.skill.name %></span></div>
+                  <p class="blurb"><%= m.user.bio ? m.user.bio.slice(0, 90) + (m.user.bio.length > 90 ? '…' : '') : 'Happy to help.' %></p>
+                  <div class="person-card-foot">
+                    <span class="avail">Available</span>
+                    <a href="/users/<%= m.user._id %>" class="btn btn-soft btn-sm">✈ Ask for help</a>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else if (skill) { %>
+            <div class="card"><p class="empty">No one has listed this skill yet. Be the first on your <a href="/profile/edit">profile</a>.</p></div>
+          <% } %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<header class="topbar">
+  <form method="GET" action="/discover" class="topbar-search">
+    <input type="search" name="q" value="<%= typeof searchQ !== 'undefined' ? searchQ : '' %>" placeholder="Search skills…" />
+  </form>
+  <div class="topbar-user">
+    <span class="topbar-name"><%= typeof currentUserName !== 'undefined' ? currentUserName : '' %></span>
+    <a href="/profile" class="avatar sm av-peach"><%= typeof currentUserName !== 'undefined' && currentUserName ? currentUserName.charAt(0) : '?' %></a>
+  </div>
+</header>

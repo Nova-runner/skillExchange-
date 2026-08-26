@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My requests — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'requests', pendingCount: received.filter(r => r.status === 'Pending').length }) %>
+    <div class="main">
+      <%- include('partials/topbar') %>
+      <div class="content">
+        <div class="page-head-row">
+          <div class="page-head">
+            <div class="eyebrow">Your workspace</div>
+            <h1>My requests</h1>
+            <p>Keep track of the exchanges that move you forward.</p>
+          </div>
+          <a href="/discover" class="btn btn-primary">✈ New request</a>
+        </div>
+
+        <% const pending = received.filter(r => r.status === 'Pending'); %>
+        <% const completed = [...received, ...sent].filter(r => r.status !== 'Pending'); %>
+
+        <div class="tabs">
+          <a href="#for-you" class="tab active">For you <span class="count"><%= pending.length %></span></a>
+          <a href="#sent" class="tab">Sent by you <span class="count"><%= sent.length %></span></a>
+          <a href="#done" class="tab">Completed <span class="count"><%= completed.length %></span></a>
+        </div>
+
+        <div class="card" id="for-you">
+          <h2 class="card-title">For you</h2>
+          <p class="card-sub">People looking forward to learning from you.</p>
+          <% if (pending.length) { %>
+            <% pending.forEach(r => { %>
+              <div class="request-row">
+                <div class="avatar av-blue"><%= r.fromUser ? r.fromUser.name.charAt(0) : '?' %></div>
+                <div class="request-body">
+                  <strong><%= r.fromUser ? r.fromUser.name : 'Someone' %></strong>
+                  <div class="want">wants help with <em><%= r.skill ? r.skill.name : 'a skill' %></em></div>
+                  <div class="msg"><%= r.message %></div>
+                </div>
+                <div class="request-actions">
+                  <form method="POST" action="/requests/<%= r._id %>/respond">
+                    <input type="hidden" name="action" value="accept" />
+                    <button type="submit" class="btn btn-soft btn-sm">Accept</button>
+                  </form>
+                  <form method="POST" action="/requests/<%= r._id %>/respond">
+                    <input type="hidden" name="action" value="decline" />
+                    <button type="submit" class="btn btn-outline btn-sm">Decline</button>
+                  </form>
+                  <span class="time"><%= new Date(r.createdAt).toLocaleDateString() %></span>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p class="empty">No pending requests for you.</p>
+          <% } %>
+        </div>
+
+        <div class="card mt" id="sent">
+          <h2 class="card-title">Sent by you</h2>
+          <p class="card-sub">You’ll see replies here when someone gets back to you.</p>
+          <% if (sent.length) { %>
+            <% sent.forEach(r => { %>
+              <div class="request-row">
+                <div class="avatar av-peach"><%= r.toUser ? r.toUser.name.charAt(0) : '?' %></div>
+                <div class="request-body">
+                  <strong>To <%= r.toUser ? r.toUser.name : 'Someone' %></strong>
+                  <div class="want">help with <em><%= r.skill ? r.skill.name : 'a skill' %></em>
+                    · <span class="status-pill status-<%= r.status.toLowerCase() %>"><%= r.status %></span>
+                  </div>
+                  <div class="msg"><%= r.message %></div>
+                </div>
+                <div class="request-actions">
+                  <span class="time"><%= new Date(r.createdAt).toLocaleDateString() %></span>
+                </div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p class="empty">Your sent requests are in good shape — or you haven’t sent any yet. <a href="/discover">Discover people</a></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

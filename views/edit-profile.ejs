@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit profile — SkillExchange</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('partials/sidebar', { activeNav: 'profile', pendingCount: 0 }) %>
+    <div class="main">
+      <%- include('partials/topbar') %>
+      <div class="content" style="max-width:560px">
+        <div class="page-head">
+          <div class="eyebrow">Your profile</div>
+          <h1>Edit profile</h1>
+          <p>List skills as comma-separated words so others can find you.</p>
+        </div>
+        <form method="POST" action="/profile" class="card form">
+          <label>Name</label>
+          <input type="text" name="name" value="<%= user.name %>" required />
+          <label>Title / role</label>
+          <input type="text" name="title" value="<%= user.title %>" placeholder="e.g. Product manager · San Francisco" />
+          <label>Short bio</label>
+          <textarea name="bio" rows="3" maxlength="400" placeholder="A sentence or two about you"><%= user.bio %></textarea>
+          <label>Avatar URL (optional)</label>
+          <input type="url" name="avatarUrl" value="<%= user.avatarUrl %>" placeholder="https://..." />
+          <label>Skills I can help with</label>
+          <input type="text" name="skillsCanHelp" value="<%= canHelpNames %>" placeholder="Excel, Data Analysis, Mathematics" />
+          <label>Skills I need help with</label>
+          <input type="text" name="skillsNeedHelp" value="<%= needHelpNames %>" placeholder="UI Design, React" />
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save profile</button>
+            <a href="/profile" class="btn btn-outline">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
